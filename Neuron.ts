@@ -1,3 +1,5 @@
+import { Connection } from "./Connection";
+
 export class Neuron {
     // input values
     inputs: number[];
@@ -6,10 +8,7 @@ export class Neuron {
     // type of the neuron; 0: input, 1: layer, 2: output
     type: number;
     // output neurons
-    connections: {
-        neuron: Neuron,
-        weight: number
-    }[];
+    connections: Connection[];
     activationFunction: number;
     bias: number;
     weight: number;
@@ -28,11 +27,7 @@ export class Neuron {
         });*/
     }
 
-    activation(func: number): number {
-        switch(func) {
-            case 0:
-                return this.value * 0;
-        }
-        return 0;
+    activation(input: number): number {
+        return Math.max(0, input); // RELU function
     }
 }
