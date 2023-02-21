@@ -29,10 +29,10 @@ export class Network {
 
         this.neurons.push(outputArray);
 
-        for (let i = 0; i < this.neurons.length - 1; i++) {
+        for (let i = 1; i < this.neurons.length; i++) {
             for (const neuron of this.neurons[i]) {
-                for (const output of this.neurons[i + 1]) {
-                    neuron.connections.push(new Connection(neuron, output, 0));
+                for (const input of this.neurons[i - 1]) {
+                    neuron.connections.push(new Connection(neuron, input, 0));
                 }
             }
         }
