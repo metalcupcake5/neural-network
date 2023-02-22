@@ -1,28 +1,26 @@
 import { Connection } from "./Connection";
 import { Neuron } from "./Neuron";
 
+export interface NetworkSchema {
+    inputs: number;
+    layers: number;
+    neuronsPerLayer: number;
+    outputs: number;
+}
+
 export class Network {
-    schema: {
-        inputs: number;
-        layers: number;
-        neuronsPerLayer: number;
-        outputs: number;
-    };
+    schema: NetworkSchema;
     neurons: Neuron[][];
     connections: Connection[];
+    done: boolean;
+    score: number;
 
-    constructor(
-        schema: {
-            inputs: number;
-            layers: number;
-            neuronsPerLayer: number;
-            outputs: number;
-        },
-        empty?: boolean
-    ) {
+    constructor(schema: NetworkSchema, empty?: boolean) {
         this.schema = schema;
         this.neurons = [];
         this.connections = [];
+        this.done = false;
+        this.score = 0;
 
         if (!empty)
             this.setup(
