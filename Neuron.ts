@@ -10,25 +10,21 @@ export class Neuron {
     // input neurons
     connections: Connection[];
     bias: number;
-    weight: number;
+
     layer: number;
 
     constructor(type, layer) {
         this.type = type;
-        this.bias = 0;
-        this.weight = Math.random() * 2 - 1;
-        //this.activationFunction = Math.random() * 5;
+        this.bias = Math.random() * 10 - 5;
+
         this.layer = layer;
         this.connections = [];
-        /*this.connections.push({
-            neuron: new Neuron(0, 0),
-            weight: 0
-        });*/
+
         this.value = 0;
     }
 
     process(): void {
-        let sum = 0;
+        let sum = this.bias;
         for (const connection of this.connections) {
             sum += connection.from.value * connection.weight;
         }
@@ -36,11 +32,15 @@ export class Neuron {
     }
 
     activation(input: number): number {
-        switch(this.type) {
+        switch (this.type) {
             case 2:
                 return Math.tanh(input);
             default:
                 return Math.max(0, input);
         }
+    }
+
+    mutate(learningFactor: number) {
+        this.bias += (Math.random() * 2 - 1) * learningFactor;
     }
 }

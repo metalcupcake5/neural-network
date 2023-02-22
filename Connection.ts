@@ -10,4 +10,8 @@ export class Connection {
         this.to = output;
         this.weight = weight;
     }
+
+    mutate(learningFactor: number) {
+        this.weight += (Math.random() * 2 - 1) * learningFactor;
+    }
 }
