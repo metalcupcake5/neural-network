@@ -4,9 +4,12 @@ import { Neuron } from "./Neuron";
 export class Network {
     neurons: Neuron[][];
 
-    constructor(inputs, layers, neuronsPerLayer, outputs) {
+    constructor(empty, inputs?, layers?, neuronsPerLayer?, outputs?) {
         this.neurons = [];
+        if(!empty) this.setup(inputs, layers, neuronsPerLayer, outputs);
+    }
 
+    setup(inputs, layers, neuronsPerLayer, outputs) {
         // input neurons
         let inputArray = [];
         for (let i = 0; i < inputs; i++) inputArray.push(new Neuron(0, 0));
@@ -32,9 +35,24 @@ export class Network {
         for (let i = 1; i < this.neurons.length; i++) {
             for (const neuron of this.neurons[i]) {
                 for (const input of this.neurons[i - 1]) {
-                    neuron.connections.push(new Connection(neuron, input, 0));
+                    neuron.connections.push(new Connection(input, neuron, Math.random() * 10 - 5));
                 }
             }
         }
+    }
+
+    predict(inputs: number[]) {
+        for (let i = 0; i < this.neurons[0].length; i++) {
+            this.neurons[0][i].value = inputs[i];
+        }
+        for (let i = 1; i < this.neurons.length; i++) {
+            for (const neuron of this.neurons[i]) {
+                neuron.process();
+            }
+        }
+    }
+
+    reproduce(learningFactor: number) {
+        let newNetwork = new Network(false);
     }
 }

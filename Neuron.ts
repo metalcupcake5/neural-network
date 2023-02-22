@@ -24,6 +24,7 @@ export class Neuron {
             neuron: new Neuron(0, 0),
             weight: 0
         });*/
+        this.value = 0;
     }
 
     process(): void {
@@ -35,6 +36,11 @@ export class Neuron {
     }
 
     activation(input: number): number {
-        return Math.max(0, input); // RELU function
+        switch(this.type) {
+            case 2:
+                return Math.tanh(input);
+            default:
+                return Math.max(0, input);
+        }
     }
 }
