@@ -14,7 +14,7 @@ export class Taxi {
         this.row = Math.floor(Math.random() * 5);
         this.column = Math.floor(Math.random() * 5);
         this.destination = Math.floor(Math.random() * 4);
-        this.passengerLocation = Math.floor(Math.random() * 5);
+        this.passengerLocation = Math.floor(Math.random() * 4);
         this.state =
             ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
             this.destination;
