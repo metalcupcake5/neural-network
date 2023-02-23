@@ -19,6 +19,28 @@ export class Taxi {
             ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
             this.destination;
         this.turns = 0;
+        this.defaultState = {
+            row: this.row,
+            column: this.column,
+            destination: this.destination,
+            passengerLocation: this.passengerLocation,
+        };
+    }
+
+    reset(shape: {
+        row: number;
+        column: number;
+        destination: number;
+        passengerLocation: number;
+    }) {
+        this.row = shape.row;
+        this.column = shape.column;
+        this.destination = shape.destination;
+        this.passengerLocation = shape.passengerLocation;
+        this.state =
+            ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
+            this.destination;
+        this.turns = 0;
     }
 
     // ((taxi_row * 5 + taxi_col) * 5 + passenger_location) * 4 + destination
