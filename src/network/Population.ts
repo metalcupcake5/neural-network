@@ -34,12 +34,15 @@ export class Population {
             let score = 0;
             let epochs = 0;
             while (!done) {
-                let act = game.act(network.predict([game.state]));
+                let act = game.act(
+                    network.predict([...Object.values(game.sample())])
+                );
                 score += act.reward;
                 done = act.done;
                 epochs++;
             }
             network.score = score;
+            //console.log(network.predict([...Object.values(game.sample())]));
         }
     }
 
@@ -57,7 +60,7 @@ export class Population {
         let newPop = [];
         this.members.slice(0, 10).forEach((net) => {
             for (let i = 0; i < 10; i++) {
-                newPop.push(net.reproduce(0.95));
+                newPop.push(net.reproduce(0.99));
             }
         });
         this.generation++;

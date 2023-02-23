@@ -95,10 +95,25 @@ export class Network {
 
     reproduce(learningFactor: number): Network {
         let newNetwork = new Network(this.schema, true);
-        for (const layer of this.neurons) {
+        newNetwork.connections = this.connections.slice(
+            0,
+            this.connections.length
+        );
+        newNetwork.neurons = this.neurons.slice(0, this.neurons.length);
+        for (const layer of newNetwork.neurons) {
+            for (const neuron of layer) {
+                neuron.mutate(learningFactor);
+            }
+        }
+
+        for (const connection of newNetwork.connections) {
+            connection.mutate(learningFactor);
+        }
+        /*for (const layer of this.neurons) {
             let newLayer = [];
             for (const neuron of layer) {
-                newLayer.push(neuron);
+                let newNeuron = neuron.copy();
+                newLayer.push(newNeuron);
             }
             newNetwork.neurons.push(newLayer);
         }
@@ -106,7 +121,7 @@ export class Network {
         for (const connection of this.connections) {
             connection.mutate(learningFactor);
             newNetwork.connections.push(connection);
-        }
+        }*/
 
         return newNetwork;
     }
