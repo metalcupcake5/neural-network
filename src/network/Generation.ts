@@ -13,10 +13,10 @@ export class Generation {
                     networkSchema
                         ? networkSchema
                         : {
-                              inputs: 2,
-                              layers: 3,
-                              neuronsPerLayer: 3,
-                              outputs: 3,
+                              inputs: 1,
+                              layers: 5,
+                              neuronsPerLayer: 5,
+                              outputs: 5,
                           }
                 )
             );
