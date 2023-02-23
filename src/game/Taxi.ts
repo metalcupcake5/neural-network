@@ -9,6 +9,12 @@ export class Taxi {
     column: number;
     state: number;
     turns: number;
+    defaultState: {
+        row: number;
+        column: number;
+        destination: number;
+        passengerLocation: number;
+    };
 
     constructor() {
         this.row = Math.floor(Math.random() * 5);
