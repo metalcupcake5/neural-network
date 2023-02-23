@@ -1,55 +1,19 @@
 // import { Generation } from "./network/Generation";
 
-import { Taxi } from "./game/Taxi";
-import { Network } from "./network/Network";
+import { Population } from "./network/Population";
 
-// let gen = new Generation(5);
-// console.log(gen.members);
-let net = new Network({
+let pop = new Population(100, {
     inputs: 1,
-    layers: 5,
-    neuronsPerLayer: 5,
+    layers: 1,
+    neuronsPerLayer: 20,
     outputs: 5,
 });
 
-function move(move) {
-    let act = game.act(move);
-    game.print();
-    console.log(`reward: ${act.reward}`);
+for (let i = 0; i < 100; i++) {
+    pop.train();
+    pop.evaluate();
+    pop.evolve();
 }
-/*  
-        0: Move south (down)
-        1: Move north (up)
-        2: Move east (right)
-        3: Move west (left)
-        4: Pickup passenger
-        5: Drop off passenger
-    */
-
-let game = new Taxi();
-let done = false;
-let score = 0;
-let epochs = 0;
-while (!done) {
-    game.print();
-    let act = game.act(Math.floor(Math.random() * 6));
-    score += act.reward;
-    done = act.done;
-    epochs++;
-}
-game.print();
-console.log(`score: ${score}`);
-console.log(`epochs: ${epochs}`);
-// let game = new Taxi();
-// game.column = 0;
-// game.row = 0;
-// game.destination = 2;
-// game.passengerLocation = 0;
-// game.print();
-// move(4);
-// move(0);
-// move(0);
-// move(0);
-// move(0);
-// move(5);
-// console.log(`took ${game.turns} turns`);
+console.log(pop.members[0].neurons[0][0].value);
+console.log("outputs");
+console.log(pop.members[0].neurons[2].forEach((n) => console.log(n.value)));

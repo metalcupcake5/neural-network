@@ -13,6 +13,8 @@ export class Neuron {
 
     layer: number;
 
+    activationFunction: number;
+
     constructor(type, layer) {
         this.type = type;
         this.bias = Math.random() * 10 - 5;
@@ -21,6 +23,7 @@ export class Neuron {
         this.connections = [];
 
         this.value = 0;
+        this.activationFunction = Math.floor(Math.random() * 3);
     }
 
     process(): void {
@@ -32,15 +35,16 @@ export class Neuron {
     }
 
     activation(input: number): number {
-        switch (this.type) {
-            case 2:
-                return Math.tanh(input);
-            default:
-                return Math.max(0, input);
+        if (this.type == 2) {
+            return Math.tanh(input);
         }
-    }
-
-    mutate(learningFactor: number) {
-        this.bias += (Math.random() * 2 - 1) * learningFactor;
+        switch (this.activationFunction) {
+            case 0:
+                return Math.tanh(input); // tanh
+            case 1:
+                return 1 / (1 + Math.exp(-input)); // sigmoid
+            default:
+                return Math.max(0, input); // relu
+        }
     }
 }

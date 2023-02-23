@@ -98,7 +98,6 @@ export class Network {
         for (const layer of this.neurons) {
             let newLayer = [];
             for (const neuron of layer) {
-                neuron.mutate(learningFactor);
                 newLayer.push(neuron);
             }
             newNetwork.neurons.push(newLayer);

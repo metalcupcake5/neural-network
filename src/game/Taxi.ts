@@ -66,7 +66,11 @@ export class Taxi {
                     this.passengerLocation == 4 ||
                     !includesArray(destinations, pos.pos)
                 )
-                    return { reward: -10, state: this.sample(), done: false };
+                    return {
+                        reward: -10,
+                        state: this.sample(),
+                        done: this.turns >= 200,
+                    };
                 this.passengerLocation = 4;
                 break;
             case 5: // dropoff
@@ -75,7 +79,11 @@ export class Taxi {
                     this.passengerLocation != 4 ||
                     !includesArray(destinations, pos.pos)
                 )
-                    return { reward: -10, state: this.sample(), done: false };
+                    return {
+                        reward: -10,
+                        state: this.sample(),
+                        done: this.turns >= 200,
+                    };
                 if (pos.destination == this.destination)
                     return { reward: 20, done: true };
                 break;
