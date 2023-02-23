@@ -83,7 +83,7 @@ export class Taxi {
         this.state =
             ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
             this.destination;
-        return { reward: -1, state: this.sample(), done: false };
+        return { reward: -1, state: this.sample(), done: this.turns >= 200 };
     }
 
     getCurrentPosition() {
@@ -111,25 +111,47 @@ export class Taxi {
             ["|", " ", "|", " ", ":", " ", "|", " ", ":", " ", "|"],
             ["|", "Y", "|", " ", ":", " ", "|", "B", ":", " ", "|"],
         ];
+
+        let dests = {
+            0: {
+                row: 0,
+                column: 1,
+            },
+            1: {
+                row: 0,
+                column: 9,
+            },
+            2: {
+                row: 4,
+                column: 1,
+            },
+            3: {
+                row: 4,
+                column: 7,
+            },
+        };
+        // default
+        ("+---------+\n|R: | : :\x1b[35mG\x1b[0m|\n| : | : : |\n| : : : : |\n| | : | : |\n|Y| : |\x1b[34;1m\x1b[43mB\x1b[0m\x1b[0m: |\n+---------+\n\n");
+        // after picking up
+        ("+---------+\n|R: | : :\x1b[35mG\x1b[0m|\n| : | : : |\n| : : : : |\n| | : |\x1b[42m_\x1b[0m: |\n|Y| : |B: |\n+---------+\n  (North)\n");
         let taxi =
             (this.passengerLocation == 4
-                ? "\x1B[46mP"
-                : `\x1B[107m${field[this.row][this.column * 2 + 1]}`) +
-            "\x1B[m";
+                ? "\x1b[42m_"
+                : `\x1B[43m${field[this.row][this.column * 2 + 1]}`) + "\x1B[m";
         field[this.row][this.column * 2 + 1] = taxi;
 
-        field[0][1] = `\x1B[41m${
-            this.passengerLocation == 0 ? "P" : field[0][1]
-        }\x1B[m`;
-        field[0][9] = `\x1B[42m${
-            this.passengerLocation == 1 ? "P" : field[0][9]
-        }\x1B[m`;
-        field[4][1] = `\x1B[43m${
-            this.passengerLocation == 2 ? "P" : field[4][1]
-        }\x1B[m`;
-        field[4][7] = `\x1B[44m${
-            this.passengerLocation == 3 ? "P" : field[4][7]
-        }\x1B[m`;
+        let destination = dests[this.destination];
+
+        field[destination.row][destination.column] = `\x1b[35m${
+            field[destination.row][destination.column]
+        }\x1b[0m`;
+
+        let passenger = dests[this.passengerLocation];
+        if (passenger) {
+            field[passenger.row][passenger.column] = `\x1b[1;34m${
+                field[passenger.row][passenger.column]
+            }\x1b[0m`;
+        }
 
         let base = "+---------+\n";
         for (const line of field) base += line.join("") + "\n";

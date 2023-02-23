@@ -1,9 +1,16 @@
 // import { Generation } from "./network/Generation";
 
 import { Taxi } from "./game/Taxi";
+import { Network } from "./network/Network";
 
 // let gen = new Generation(5);
 // console.log(gen.members);
+let net = new Network({
+    inputs: 1,
+    layers: 5,
+    neuronsPerLayer: 5,
+    outputs: 5,
+});
 
 function move(move) {
     let act = game.act(move);
@@ -29,8 +36,20 @@ while (!done) {
     score += act.reward;
     done = act.done;
     epochs++;
-    console.log(`score: ${score}`);
 }
 game.print();
 console.log(`score: ${score}`);
 console.log(`epochs: ${epochs}`);
+// let game = new Taxi();
+// game.column = 0;
+// game.row = 0;
+// game.destination = 2;
+// game.passengerLocation = 0;
+// game.print();
+// move(4);
+// move(0);
+// move(0);
+// move(0);
+// move(0);
+// move(5);
+// console.log(`took ${game.turns} turns`);
