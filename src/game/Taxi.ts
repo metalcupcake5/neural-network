@@ -16,21 +16,35 @@ export class Taxi {
         passengerLocation: number;
     };
 
-    constructor() {
-        this.row = Math.floor(Math.random() * 5);
-        this.column = Math.floor(Math.random() * 5);
-        this.destination = Math.floor(Math.random() * 4);
-        this.passengerLocation = Math.floor(Math.random() * 4);
-        this.state =
-            ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
-            this.destination;
-        this.turns = 0;
-        this.defaultState = {
-            row: this.row,
-            column: this.column,
-            destination: this.destination,
-            passengerLocation: this.passengerLocation,
-        };
+    constructor(state?) {
+        if (!state) {
+            this.row = Math.floor(Math.random() * 5);
+            this.column = Math.floor(Math.random() * 5);
+            this.destination = Math.floor(Math.random() * 4);
+            this.passengerLocation = Math.floor(Math.random() * 4);
+            this.state =
+                ((this.row * 5 + this.column) * 5 + this.passengerLocation) *
+                    4 +
+                this.destination;
+            this.turns = 0;
+            this.defaultState = state || {
+                row: this.row,
+                column: this.column,
+                destination: this.destination,
+                passengerLocation: this.passengerLocation,
+            };
+        } else {
+            this.row = state.row;
+            this.column = state.column;
+            this.destination = state.destination;
+            this.passengerLocation = state.passengerLocation;
+            this.state =
+                ((this.row * 5 + this.column) * 5 + this.passengerLocation) *
+                    4 +
+                this.destination;
+            this.turns = 0;
+            this.defaultState = state;
+        }
     }
 
     reset(shape: {
@@ -87,41 +101,25 @@ export class Taxi {
         switch (action) {
             case 0: // down
                 if (this.row == 4) {
-                    return {
-                        reward: -500,
-                        state: this.sample(),
-                        done: true,
-                    };
+                    break;
                 }
                 this.row += 1;
                 break;
             case 1: // up
                 if (this.row == 0) {
-                    return {
-                        reward: -500,
-                        state: this.sample(),
-                        done: true,
-                    };
+                    break;
                 }
                 this.row -= 1;
                 break;
             case 2: // right
                 if (this.column == 4 || includesArray(conflicts[2], pos.pos)) {
-                    return {
-                        reward: -500,
-                        state: this.sample(),
-                        done: true,
-                    };
+                    break;
                 }
                 this.column += 1;
                 break;
             case 3: // left
                 if (this.column == 0 || includesArray(conflicts[3], pos.pos)) {
-                    return {
-                        reward: -500,
-                        state: this.sample(),
-                        done: true,
-                    };
+                    break;
                 }
                 this.column -= 1;
                 break;
@@ -134,11 +132,11 @@ export class Taxi {
                     return {
                         reward: -10,
                         state: this.sample(),
-                        done: this.turns >= 200,
+                        done: this.turns >= 500,
                     };
                 this.passengerLocation = 4;
                 return {
-                    reward: 50,
+                    reward: 20,
                     state: this.sample(),
                     done: this.turns >= 500,
                 };
@@ -151,16 +149,16 @@ export class Taxi {
                     return {
                         reward: -10,
                         state: this.sample(),
-                        done: this.turns >= 200,
+                        done: this.turns >= 500,
                     };
                 if (pos.destination == this.destination)
-                    return { reward: 200, done: true };
+                    return { reward: 20, done: true };
                 break;
         }
         this.state =
             ((this.row * 5 + this.column) * 5 + this.passengerLocation) * 4 +
             this.destination;
-        return { reward: 1, state: this.sample(), done: this.turns >= 500 };
+        return { reward: -1, state: this.sample(), done: this.turns >= 500 };
     }
 
     getCurrentPosition() {

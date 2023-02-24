@@ -29,10 +29,10 @@ export class Population {
     train() {
         let game = new Taxi();
         let state = game.defaultState;
+        //console.log(state);
         for (let i = 0; i < this.members.length; i++) {
             let network = this.members[i];
             game.reset(state);
-            console.log(game.state);
             let done = false;
             let score = 0;
             let epochs = 0;
@@ -60,16 +60,17 @@ export class Population {
 
     evolve() {
         this.members.sort((a, b) => b.score - a.score);
-        let newPop = this.members.slice(0, 1);
-        for (let i = 0; i < 99; i++) {
+        let newPop = [];
+        /*for (let i = 0; i < 90; i++) {
             newPop.push(this.members[0].reproduce(0.95));
-        }
-        /*this.members.slice(0, 5).forEach((net) => {
+        }*/
+        this.members.slice(0, 5).forEach((net) => {
             //newPop.push(this.members[0].)
             for (let i = 0; i < 10; i++) {
                 newPop.push(net.reproduce(0.99));
             }
-        });*/
+        });
+        this.members = newPop;
         this.generation++;
     }
 }
