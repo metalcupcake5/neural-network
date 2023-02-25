@@ -5,16 +5,22 @@ import { Taxi } from "./game/Taxi";
 import { Population } from "./network/Population";
 
 let game = new Snake();
+game.food = [4, 5];
 game.print();
 game.step(0);
 game.print();
-game.step(0);
+game.step(3);
 game.print();
-game.step(0);
+game.food = [4, 3];
+game.step(3);
 game.print();
-game.step(0);
+game.step(3);
 game.print();
-game.step(0);
+game.step(2);
+game.print();
+game.step(2);
+game.print();
+game.step(2);
 game.print();
 
 /*let pop = new Population(100, {

@@ -7,6 +7,7 @@ export class Snake {
     food: [number, number];
     ateFood: boolean;
     ateFoodPos: [number, number];
+    life: number;
 
     constructor() {
         this.body = [[5, 5]];
@@ -18,22 +19,45 @@ export class Snake {
     }
 
     step(direction: number) {
+        let newPos;
+        let headR = this.body[0][0];
+        let headC = this.body[0][1];
+
+        // 0: up, 1: right, 2: down, 3: left
         switch (direction) {
             case 0: //up
-                let headR = this.body[0][0];
-                let headC = this.body[0][1];
-                if (this.food[0] == headR && this.food[1] == headC) {
-                    this.ateFood = true;
-                }
-                if (this.ateFood) {
-                    this.body.push(this.ateFoodPos);
-                    this.ateFood = false;
-                }
-                this.body = [
-                    [headR - 1, headC],
-                    ...this.body.slice(0, this.body.length - 1),
-                ];
+                newPos = [headR - 1, headC];
+                break;
+            case 1:
+                newPos = [headR, headC + 1];
+                break;
+            case 2:
+                newPos = [headR + 1, headC];
+                break;
+            case 3:
+                newPos = [headR, headC - 1];
+                break;
         }
+
+        if (this.food[0] == headR && this.food[1] == headC) {
+            this.ateFood = true;
+            this.food = [
+                Math.floor(Math.random() * 10),
+                Math.floor(Math.random() * 10),
+            ];
+        }
+
+        if (this.ateFood) {
+            this.body.push(this.ateFoodPos);
+            this.ateFood = false;
+        }
+        this.body = [newPos, ...this.body.slice(0, this.body.length - 1)];
+        return {
+            up: {
+                wall: headR,
+                food: headC == this.food[1] ? 3 : -1,
+            },
+        };
     }
 
     print() {
@@ -43,11 +67,10 @@ export class Snake {
             let str = "|";
             for (let c = 0; c < 10; c++) {
                 str += " ";
+                arr[this.food[0]][this.food[1]] = ".";
                 if (includesArray(this.body, [r, c])) {
                     arr[r][c] = "o";
                 }
-                console.log(this.food);
-                arr[this.food[0]][this.food[1]] = ".";
                 str += arr[r][c];
                 str += " ";
             }
