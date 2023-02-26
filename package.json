@@ -4,5 +4,8 @@
     },
     "scripts": {
         "run": "npx tsc && node build/index.js"
+    },
+    "dependencies": {
+        "mathjs": "^11.6.0"
     }
 }
