@@ -15,11 +15,13 @@ export class Network {
     outputLayer: Matrix;
     weights: Matrix[];
     biases: Matrix[];
+    score: number;
 
     constructor(schema: NetworkSchema, empty?: boolean) {
         this.schema = schema;
         this.weights = [];
         this.biases = [];
+        this.score = 0;
 
         this.inputLayer = math.matrix(math.zeros(schema.inputs));
         this.hiddenLayers = math.matrix(
@@ -89,6 +91,44 @@ export class Network {
             this.weights[this.schema.layers],
             this.hiddenLayers[this.schema.layers - 1]
         );
-        return this.outputLayer.toArray();
+
+        math.forEach(this.outputLayer, (value, index, matrix) => {
+            matrix.set(index, 1 / (1 + Math.exp(-value)));
+        });
+
+        let outputs = this.outputLayer.toArray();
+
+        return outputs.indexOf(Math.max.apply(null, outputs));
+    }
+
+    reproduce(learningFactor: number) {
+        let newNet = new Network(this.schema, true);
+        newNet.inputLayer = this.inputLayer.clone();
+        newNet.hiddenLayers = this.hiddenLayers.clone();
+        newNet.outputLayer = this.outputLayer.clone();
+
+        for (let i = 0; i < this.weights.length; i++) {
+            let newWeights = this.weights[i].clone();
+            math.forEach(newWeights, (value, index, matrix) => {
+                matrix.set(
+                    index,
+                    value + (Math.random() * 2 - 1) * learningFactor
+                );
+            });
+            newNet.weights[i] = newWeights;
+        }
+
+        for (let i = 0; i < this.biases.length; i++) {
+            let newBiases = this.biases[i].clone();
+            math.forEach(newBiases, (value, index, matrix) => {
+                matrix.set(
+                    index,
+                    value + (Math.random() * 2 - 1) * learningFactor
+                );
+            });
+            newNet.biases[i] = newBiases;
+        }
+
+        return newNet;
     }
 }

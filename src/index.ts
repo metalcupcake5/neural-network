@@ -1,11 +1,20 @@
 import math = require("mathjs");
 import { Network } from "./network/Network";
+import { Population } from "./network/Population";
 
-let net = new Network({
-    inputs: 2,
-    layers: 3,
+let pop = new Population(2000, {
+    inputs: 4,
+    layers: 1,
     neuronsPerLayer: 3,
-    outputs: 2,
+    outputs: 5,
 });
+for (let i = 0; i < 1000; i++) {
+    console.log(`pop ${i + 1}`);
+    pop.train();
+    pop.evaluate();
+    pop.evolve();
+}
 
-console.log(net.predict([1, 2]));
+pop.evaluate();
+let network = pop.members[0];
+console.log(`score: ${network.score}`);
