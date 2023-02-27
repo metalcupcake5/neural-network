@@ -4,24 +4,24 @@ import { Snake } from "./game/Snake";
 import { Taxi } from "./game/Taxi";
 import { Population } from "./network-old/Population";
 
-let game = new Snake();
-game.food = [4, 5];
-game.print();
-game.step(0);
-game.print();
-game.step(3);
-game.print();
-game.food = [4, 3];
-game.step(3);
-game.print();
-game.step(3);
-game.print();
-game.step(2);
-game.print();
-game.step(2);
-game.print();
-game.step(2);
-game.print();
+// let game = new Snake();
+// game.food = [4, 5];
+// game.print();
+// game.step(0);
+// game.print();
+// game.step(3);
+// game.print();
+// game.food = [4, 3];
+// game.step(3);
+// game.print();
+// game.step(3);
+// game.print();
+// game.step(2);
+// game.print();
+// game.step(2);
+// game.print();
+// game.step(2);
+// game.print();
 
 /*let pop = new Population(100, {
     inputs: 4,

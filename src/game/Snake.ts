@@ -15,10 +15,11 @@ export class Snake {
             Math.floor(Math.random() * 10),
             Math.floor(Math.random() * 10),
         ];
+        this.life = 100;
         //this.direction = 3;
     }
 
-    step(direction: number) {
+    act(direction: number) {
         let newPos;
         let headR = this.body[0][0];
         let headC = this.body[0][1];
@@ -39,6 +40,10 @@ export class Snake {
                 break;
         }
 
+        if (newPos.includes(-1) || newPos.includes(10)) {
+            console.log("dead");
+        }
+
         if (this.food[0] == headR && this.food[1] == headC) {
             this.ateFood = true;
             this.food = [
@@ -52,10 +57,43 @@ export class Snake {
             this.ateFood = false;
         }
         this.body = [newPos, ...this.body.slice(0, this.body.length - 1)];
+
         return {
             up: {
-                wall: headR,
-                food: headC == this.food[1] ? 3 : -1,
+                wall: newPos[0] + 1,
+                food:
+                    newPos[1] == this.food[1]
+                        ? this.food[0] >= newPos[0]
+                            ? -1
+                            : newPos[0] - this.food[0]
+                        : -1,
+            },
+            down: {
+                wall: 10 - newPos[0],
+                food:
+                    newPos[1] == this.food[1]
+                        ? this.food[0] <= newPos[0]
+                            ? -1
+                            : this.food[0] - newPos[0]
+                        : -1,
+            },
+            left: {
+                wall: newPos[1] + 1,
+                food:
+                    newPos[0] == this.food[0]
+                        ? this.food[1] >= newPos[1]
+                            ? -1
+                            : newPos[1] - this.food[1]
+                        : -1,
+            },
+            right: {
+                wall: 10 - newPos[1],
+                food:
+                    newPos[0] == this.food[0]
+                        ? this.food[1] <= newPos[1]
+                            ? -1
+                            : this.food[1] - newPos[1]
+                        : -1,
             },
         };
     }
