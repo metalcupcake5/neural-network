@@ -27,11 +27,12 @@ export class Population {
     }
 
     train() {
-        let game = new Taxi();
-        let state = game.defaultState;
+        // let game = new Taxi();
+        // let state = game.defaultState;
         for (let i = 0; i < this.members.length; i++) {
             let network = this.members[i];
-            game.reset(state);
+            // game.reset(state);
+            let game = new Taxi();
             let done = false;
             let score = 0;
             let epochs = 0;
