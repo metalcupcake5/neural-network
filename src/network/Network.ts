@@ -4,7 +4,7 @@ import math = require("mathjs");
 export class Network {
     schema: NetworkSchema;
     inputLayer: Matrix;
-    hiddenLayers: Matrix;
+    hiddenLayers: Matrix[];
     outputLayer: Matrix;
     weights: Matrix[];
     biases: Matrix[];
@@ -19,10 +19,16 @@ export class Network {
     create(empty: boolean) {
         this.weights = [];
         this.biases = [];
+
         this.inputLayer = math.matrix(math.zeros(this.schema.inputs));
-        this.hiddenLayers = math.matrix(
-            math.zeros(this.schema.layers, this.schema.neuronsPerLayer)
-        );
+
+        this.hiddenLayers = [];
+        for (let i = 0; i < this.schema.layers; i++) {
+            this.hiddenLayers.push(
+                math.matrix(math.zeros(this.schema.neuronsPerLayer))
+            );
+        }
+
         this.outputLayer = math.matrix(math.zeros(this.schema.outputs));
 
         this.weights[0] = math.matrix(
@@ -63,22 +69,19 @@ export class Network {
 
     predict(input: number[]) {
         this.inputLayer = math.matrix(input);
-        //console.log(math.squeeze(math.row(this.hiddenLayers, 0)));
 
         this.hiddenLayers[0] = math.add(
             math.multiply(this.weights[0], this.inputLayer),
             this.biases[0]
         );
+
         //activation
         math.forEach(this.hiddenLayers[0], (value, index, matrix) => {
             matrix.set(index, Math.max(0, value)); // relu
         });
         for (let i = 1; i < this.schema.layers; i++) {
             this.hiddenLayers[i] = math.add(
-                math.multiply(
-                    this.weights[i],
-                    math.squeeze(math.row(this.hiddenLayers, i - 1))
-                ),
+                math.multiply(this.weights[i], this.hiddenLayers[i - 1]),
                 this.biases[i]
             );
 
@@ -106,23 +109,18 @@ export class Network {
     clone() {
         let newNet = new Network(this.schema, true);
         newNet.inputLayer = this.inputLayer.clone();
-        newNet.hiddenLayers = this.hiddenLayers.clone();
         newNet.outputLayer = this.outputLayer.clone();
 
+        for (let i = 0; i < this.hiddenLayers.length; i++) {
+            newNet.hiddenLayers[i] = this.hiddenLayers[i].clone();
+        }
+
         for (let i = 0; i < this.weights.length; i++) {
-            let newWeights = this.weights[i].clone();
-            math.forEach(newWeights, (value, index, matrix) => {
-                matrix.set(index, value);
-            });
-            newNet.weights[i] = newWeights;
+            newNet.weights[i] = this.weights[i].clone();
         }
 
         for (let i = 0; i < this.biases.length; i++) {
-            let newBiases = this.biases[i].clone();
-            math.forEach(newBiases, (value, index, matrix) => {
-                matrix.set(index, value);
-            });
-            newNet.biases[i] = newBiases;
+            newNet.biases[i] = this.biases[i].clone();
         }
 
         return newNet;
@@ -130,9 +128,6 @@ export class Network {
 
     reproduce(learningFactor: number) {
         let newNet = new Network(this.schema, true);
-        newNet.inputLayer = this.inputLayer.clone();
-        newNet.hiddenLayers = this.hiddenLayers.clone();
-        newNet.outputLayer = this.outputLayer.clone();
 
         for (let i = 0; i < this.weights.length; i++) {
             let newWeights = this.weights[i].clone();
