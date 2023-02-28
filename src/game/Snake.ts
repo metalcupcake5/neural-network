@@ -44,6 +44,10 @@ export class Snake {
             return { done: true, score: this.score };
         }
 
+        if (includesArray(this.body, newPos)) {
+            return { done: true, score: this.score };
+        }
+
         if (this.food[0] == headR && this.food[1] == headC) {
             this.ateFood = true;
             this.life = 50;
