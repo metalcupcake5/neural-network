@@ -1,13 +1,6 @@
 import { Matrix } from "mathjs";
 import math = require("mathjs");
 
-export interface NetworkSchema {
-    inputs: number;
-    layers: number;
-    neuronsPerLayer: number;
-    outputs: number;
-}
-
 export class Network {
     schema: NetworkSchema;
     inputLayer: Matrix;
@@ -19,30 +12,38 @@ export class Network {
 
     constructor(schema: NetworkSchema, empty?: boolean) {
         this.schema = schema;
+        this.score = 0;
+        this.create(empty);
+    }
+
+    create(empty: boolean) {
         this.weights = [];
         this.biases = [];
-        this.score = 0;
-
-        this.inputLayer = math.matrix(math.zeros(schema.inputs));
+        this.inputLayer = math.matrix(math.zeros(this.schema.inputs));
         this.hiddenLayers = math.matrix(
-            math.zeros(schema.layers, schema.neuronsPerLayer)
+            math.zeros(this.schema.layers, this.schema.neuronsPerLayer)
         );
-        this.outputLayer = math.matrix(math.zeros(schema.outputs));
+        this.outputLayer = math.matrix(math.zeros(this.schema.outputs));
 
         this.weights[0] = math.matrix(
-            math.zeros(schema.neuronsPerLayer, schema.inputs)
+            math.zeros(this.schema.neuronsPerLayer, this.schema.inputs)
         );
-        for (let i = 1; i < schema.layers; i++) {
+        for (let i = 1; i < this.schema.layers; i++) {
             this.weights[i] = math.matrix(
-                math.zeros(schema.neuronsPerLayer, schema.neuronsPerLayer)
+                math.zeros(
+                    this.schema.neuronsPerLayer,
+                    this.schema.neuronsPerLayer
+                )
             );
         }
-        this.weights[schema.layers] = math.matrix(
-            math.zeros(schema.outputs, schema.neuronsPerLayer)
+        this.weights[this.schema.layers] = math.matrix(
+            math.zeros(this.schema.outputs, this.schema.neuronsPerLayer)
         );
 
-        for (let i = 0; i < schema.layers; i++) {
-            this.biases[i] = math.matrix(math.zeros(schema.neuronsPerLayer));
+        for (let i = 0; i < this.schema.layers; i++) {
+            this.biases[i] = math.matrix(
+                math.zeros(this.schema.neuronsPerLayer)
+            );
         }
 
         if (!empty) {
@@ -83,7 +84,8 @@ export class Network {
 
             //activation
             math.forEach(this.hiddenLayers[i], (value, index, matrix) => {
-                matrix.set(index, Math.max(0, value)); // relu
+                //matrix.set(index, Math.max(0, value)); // relu
+                matrix.set(index, value >= 0 ? value : 0.01 * value); // leaky relu
             });
         }
 
@@ -99,6 +101,31 @@ export class Network {
         let outputs = this.outputLayer.toArray();
 
         return outputs.indexOf(Math.max.apply(null, outputs));
+    }
+
+    clone() {
+        let newNet = new Network(this.schema, true);
+        newNet.inputLayer = this.inputLayer.clone();
+        newNet.hiddenLayers = this.hiddenLayers.clone();
+        newNet.outputLayer = this.outputLayer.clone();
+
+        for (let i = 0; i < this.weights.length; i++) {
+            let newWeights = this.weights[i].clone();
+            math.forEach(newWeights, (value, index, matrix) => {
+                matrix.set(index, value);
+            });
+            newNet.weights[i] = newWeights;
+        }
+
+        for (let i = 0; i < this.biases.length; i++) {
+            let newBiases = this.biases[i].clone();
+            math.forEach(newBiases, (value, index, matrix) => {
+                matrix.set(index, value);
+            });
+            newNet.biases[i] = newBiases;
+        }
+
+        return newNet;
     }
 
     reproduce(learningFactor: number) {
@@ -131,4 +158,45 @@ export class Network {
 
         return newNet;
     }
+
+    export(): ExportObject {
+        let output = {
+            schema: this.schema,
+            weights: [],
+            biases: [],
+        };
+
+        for (const layer of this.weights) {
+            output.weights.push(JSON.stringify(layer, math.replacer));
+        }
+        for (const layer of this.biases) {
+            output.biases.push(JSON.stringify(layer, math.replacer));
+        }
+        return output;
+    }
+
+    importFromFile(data: ExportObject) {
+        this.schema = data.schema;
+        this.create(true);
+        for (let i = 0; i < data.weights.length; i++) {
+            this.weights[i] = JSON.parse(data.weights[i], math.reviver);
+        }
+
+        for (let i = 0; i < data.biases.length; i++) {
+            this.biases[i] = JSON.parse(data.biases[i], math.reviver);
+        }
+    }
+}
+
+export interface NetworkSchema {
+    inputs: number;
+    layers: number;
+    neuronsPerLayer: number;
+    outputs: number;
+}
+
+export interface ExportObject {
+    schema: NetworkSchema;
+    weights: any[];
+    biases: any[];
 }
