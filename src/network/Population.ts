@@ -63,7 +63,11 @@ export class Population {
         this.networks.slice(0, 10).forEach((net) => {
             scores.push(net.fitness);
         });
-        console.log(scores.join(", "));
+        let total = this.networks.reduce(
+            (total, net) => (total += net.fitness),
+            0
+        );
+        console.log(scores.join(", ") + ` | average: ${total / 10}`);
     }
 
     evolve() {
