@@ -15,7 +15,7 @@ export class Snake {
             Math.floor(Math.random() * 10),
             Math.floor(Math.random() * 10),
         ];
-        this.life = 50;
+        this.life = 100;
         this.score = 0;
         this.turns = 0;
         //this.direction = 3;
@@ -52,7 +52,7 @@ export class Snake {
 
         if (this.food[0] == headR && this.food[1] == headC) {
             this.ateFood = true;
-            this.life = 50;
+            this.life = 100;
             this.score++;
             this.food = [
                 Math.floor(Math.random() * 10),

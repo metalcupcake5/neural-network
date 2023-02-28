@@ -14,7 +14,7 @@ async function main() {
     }
 
     console.log("training");
-    let pop = new Population(2000, {
+    let pop = new Population(2000, 0.2, 0.75, {
         inputs: 8,
         layers: 3,
         neuronsPerLayer: 8,
@@ -28,7 +28,7 @@ async function main() {
         if ((i + 1) % 100 == 0) {
             fs.writeFileSync(
                 `./build/networks/${i}.json`,
-                JSON.stringify(pop.members[0].export())
+                JSON.stringify(pop.networks[0].export())
             );
         }
         pop.evolve();
@@ -36,8 +36,20 @@ async function main() {
     }
 
     pop.evaluate();
-    let network = pop.members[0];
-    console.log(`score: ${network.score}`);
+    let network = pop.networks[0];
+    console.log(`score: ${network.fitness}`);
+}
+
+async function testing(num) {
+    let pop = new Population(500, 0.75, 0.2, {
+        inputs: 8,
+        layers: 3,
+        neuronsPerLayer: 8,
+        outputs: 4,
+    });
+
+    pop.train();
+    pop.findParent();
 }
 
 async function replay(num) {
@@ -65,15 +77,14 @@ async function replay(num) {
         setTimeout(() => {
             let sample = Object.values(game.sample());
             let prediction = net.predict([...sample]);
-            console.log(prediction);
             let act = game.act(prediction);
             done = act.done;
 
-            //game.print();
+            game.print();
             if (!done) {
                 run();
             }
-        }, 1000);
+        }, 250);
     }
 }
 
@@ -102,30 +113,6 @@ async function player() {
     rl.close();
 }
 
-async function testing() {
-    let game = new Snake();
-    game.food = [4, 5];
-    game.print();
-    console.log(game.act(0));
-    game.print();
-
-    console.log(game.act(3));
-    game.print();
-    game.food = [4, 2];
-    console.log(game.act(3));
-    game.print();
-    console.log(game.act(3));
-    game.print();
-    game.food = [5, 1];
-    console.log(game.act(3));
-    game.print();
-
-    console.log(game.act(3));
-    game.print();
-    console.log(game.act(3));
-    game.print();
-}
-
 async function cloneTest() {
     let net = new Network({
         inputs: 2,
@@ -138,6 +125,6 @@ async function cloneTest() {
 
     let test = net.clone();
 
-    console.log(net.predict([0, 1]));
-    console.log(test.predict([0, 1]));
+    console.log(net.hiddenLayers[0]);
+    console.log(net.hiddenLayers[0]);
 }

@@ -8,11 +8,11 @@ export class Network {
     outputLayer: Matrix;
     weights: Matrix[];
     biases: Matrix[];
-    score: number;
+    fitness: number;
 
     constructor(schema: NetworkSchema, empty?: boolean) {
         this.schema = schema;
-        this.score = 0;
+        this.fitness = 0;
         this.create(empty);
     }
 
@@ -146,6 +146,34 @@ export class Network {
                 matrix.set(
                     index,
                     value + (Math.random() * 2 - 1) * learningFactor
+                );
+            });
+            newNet.biases[i] = newBiases;
+        }
+
+        return newNet;
+    }
+
+    crossover(parent: Network, rate: number) {
+        let newNet = new Network(this.schema, true);
+
+        for (let i = 0; i < this.weights.length; i++) {
+            let newWeights = this.weights[i].clone();
+            math.forEach(newWeights, (value, index, matrix) => {
+                matrix.set(
+                    index,
+                    Math.random() > rate ? parent.weights[i].get(index) : value
+                );
+            });
+            newNet.weights[i] = newWeights;
+        }
+
+        for (let i = 0; i < this.biases.length; i++) {
+            let newBiases = this.biases[i].clone();
+            math.forEach(newBiases, (value, index, matrix) => {
+                matrix.set(
+                    index,
+                    Math.random() > rate ? parent.biases[i].get(index) : value
                 );
             });
             newNet.biases[i] = newBiases;
