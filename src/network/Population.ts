@@ -1,3 +1,4 @@
+import { Snake } from "../game/Snake";
 import { Taxi } from "../game/Taxi";
 import { Network, NetworkSchema } from "./Network";
 
@@ -32,19 +33,18 @@ export class Population {
         for (let i = 0; i < this.members.length; i++) {
             let network = this.members[i];
             // game.reset(state);
-            let game = new Taxi();
+            let game = new Snake();
             let done = false;
-            let score = 0;
+            let fitness = 0;
             let epochs = 0;
             while (!done) {
-                let act = game.act(
-                    network.predict([...Object.values(game.sample())])
-                );
-                score += act.reward;
+                let sample = Object.values(game.sample());
+                let act = game.act(network.predict([...sample]));
                 done = act.done;
+                fitness = act.fitness;
                 epochs++;
             }
-            network.score = score;
+            network.score = fitness;
         }
     }
 
@@ -61,10 +61,15 @@ export class Population {
         this.members.sort((a, b) => b.score - a.score);
         let newPop = [];
         this.members.slice(0, 5).forEach((net) => {
-            for (let i = 0; i < this.total / 5; i++) {
-                newPop.push(net.reproduce(0.99));
-            }
+            newPop.push(net.clone());
         });
+        while (newPop.length < this.total) {
+            newPop.push(
+                this.members[Math.floor(Math.random() * this.total)].reproduce(
+                    0.1
+                )
+            );
+        }
         this.members = newPop;
         this.generation++;
     }

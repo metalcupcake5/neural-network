@@ -7,6 +7,7 @@ export class Snake {
     ateFood: boolean;
     ateFoodPos: [number, number];
     life: number;
+    turns: number;
 
     constructor() {
         this.body = [[5, 5]];
@@ -16,6 +17,7 @@ export class Snake {
         ];
         this.life = 50;
         this.score = 0;
+        this.turns = 0;
         //this.direction = 3;
     }
 
@@ -41,11 +43,11 @@ export class Snake {
         }
 
         if (newPos.includes(-1) || newPos.includes(10)) {
-            return { done: true, score: this.score };
+            return { done: true, score: this.score, fitness: this.fitness() };
         }
 
         if (includesArray(this.body, newPos)) {
-            return { done: true, score: this.score };
+            return { done: true, score: this.score, fitness: this.fitness() };
         }
 
         if (this.food[0] == headR && this.food[1] == headC) {
@@ -65,8 +67,10 @@ export class Snake {
         this.body = [newPos, ...this.body];
 
         this.life--;
+        this.turns++;
 
-        if (this.life <= 0) return { done: true, score: this.score };
+        if (this.life <= 0)
+            return { done: true, score: this.score, fitness: this.fitness() };
 
         return {
             up: {
@@ -107,6 +111,7 @@ export class Snake {
             },
             done: false,
             score: this.score,
+            fitness: this.fitness(),
         };
     }
 
@@ -129,6 +134,53 @@ export class Snake {
         }
         output.push(Array(32).fill("-").join(""));
         console.log(output.join("\n"));
+    }
+
+    sample(): {
+        wall_up: number;
+        food_up: number;
+        wall_down: number;
+        food_down: number;
+        wall_left: number;
+        food_left: number;
+        wall_right: number;
+        food_right: number;
+    } {
+        let head = this.body[0];
+        return {
+            wall_up: head[0] + 1,
+            food_up:
+                head[1] == this.food[1]
+                    ? this.food[0] >= head[0]
+                        ? -1
+                        : head[0] - this.food[0]
+                    : -1,
+            wall_down: 10 - head[0],
+            food_down:
+                head[1] == this.food[1]
+                    ? this.food[0] <= head[0]
+                        ? -1
+                        : this.food[0] - head[0]
+                    : -1,
+            wall_left: head[1] + 1,
+            food_left:
+                head[0] == this.food[0]
+                    ? this.food[1] >= head[1]
+                        ? -1
+                        : head[1] - this.food[1]
+                    : -1,
+            wall_right: 10 - head[1],
+            food_right:
+                head[0] == this.food[0]
+                    ? this.food[1] <= head[1]
+                        ? -1
+                        : this.food[1] - head[1]
+                    : -1,
+        };
+    }
+
+    fitness() {
+        return 10 * this.score + this.turns;
     }
 }
 
