@@ -3,7 +3,6 @@ export class Snake {
     tail: [number, number][];
     //direction: number; // 0: up, 1: right, 2: down, 3: left
     score: number;
-    done: boolean;
     food: [number, number];
     ateFood: boolean;
     ateFoodPos: [number, number];
@@ -15,7 +14,8 @@ export class Snake {
             Math.floor(Math.random() * 10),
             Math.floor(Math.random() * 10),
         ];
-        this.life = 100;
+        this.life = 50;
+        this.score = 0;
         //this.direction = 3;
     }
 
@@ -41,22 +41,28 @@ export class Snake {
         }
 
         if (newPos.includes(-1) || newPos.includes(10)) {
-            console.log("dead");
+            return { done: true, score: this.score };
         }
 
         if (this.food[0] == headR && this.food[1] == headC) {
             this.ateFood = true;
+            this.life = 50;
+            this.score++;
             this.food = [
                 Math.floor(Math.random() * 10),
                 Math.floor(Math.random() * 10),
             ];
         }
 
-        if (this.ateFood) {
-            this.body.push(this.ateFoodPos);
-            this.ateFood = false;
+        if (!this.ateFood) {
+            this.body = this.body.splice(0, this.body.length - 1);
         }
-        this.body = [newPos, ...this.body.slice(0, this.body.length - 1)];
+        this.ateFood = false;
+        this.body = [newPos, ...this.body];
+
+        this.life--;
+
+        if (this.life <= 0) return { done: true, score: this.score };
 
         return {
             up: {
@@ -95,6 +101,8 @@ export class Snake {
                             : this.food[1] - newPos[1]
                         : -1,
             },
+            done: false,
+            score: this.score,
         };
     }
 
