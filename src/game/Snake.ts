@@ -9,6 +9,9 @@ export class Snake {
     life: number;
     turns: number;
 
+    /**
+     * Create a new game of snake
+     */
     constructor() {
         this.body = [[5, 5]];
         this.food = [
@@ -21,6 +24,11 @@ export class Snake {
         //this.direction = 3;
     }
 
+    /**
+     * Move one frame forward
+     * @param direction Direction to move
+     * @returns Object with game info
+     */
     act(direction: number) {
         let newPos;
         let headR = this.body[0][0];
@@ -73,48 +81,15 @@ export class Snake {
             return { done: true, score: this.score, fitness: this.fitness() };
 
         return {
-            up: {
-                wall: newPos[0] + 1,
-                food:
-                    newPos[1] == this.food[1]
-                        ? this.food[0] >= newPos[0]
-                            ? -1
-                            : newPos[0] - this.food[0]
-                        : -1,
-            },
-            down: {
-                wall: 10 - newPos[0],
-                food:
-                    newPos[1] == this.food[1]
-                        ? this.food[0] <= newPos[0]
-                            ? -1
-                            : this.food[0] - newPos[0]
-                        : -1,
-            },
-            left: {
-                wall: newPos[1] + 1,
-                food:
-                    newPos[0] == this.food[0]
-                        ? this.food[1] >= newPos[1]
-                            ? -1
-                            : newPos[1] - this.food[1]
-                        : -1,
-            },
-            right: {
-                wall: 10 - newPos[1],
-                food:
-                    newPos[0] == this.food[0]
-                        ? this.food[1] <= newPos[1]
-                            ? -1
-                            : this.food[1] - newPos[1]
-                        : -1,
-            },
             done: false,
             score: this.score,
             fitness: this.fitness(),
         };
     }
 
+    /**
+     * Print the state of the game
+     */
     print() {
         let arr = [...Array(10)].map((e) => Array(10).fill(" "));
         let output = [Array(32).fill("-").join("")];
@@ -136,6 +111,10 @@ export class Snake {
         console.log(output.join("\n"));
     }
 
+    /**
+     * Get a sample of the distances to the wall and food in each direction
+     * @returns Object of distances
+     */
     sample(): {
         wall_up: number;
         food_up: number;
@@ -179,11 +158,21 @@ export class Snake {
         };
     }
 
+    /**
+     * Returns current fitness of the game
+     * @returns Fitness value
+     */
     fitness() {
         return 10 * this.score + this.turns;
     }
 }
 
+/**
+ * Check if an array contains another array
+ * @param data Source array
+ * @param arr Array to search for
+ * @returns If `arr` was found in `data`
+ */
 const includesArray = (data, arr) => {
     return data.some(
         (e) => Array.isArray(e) && e.every((o, i) => Object.is(arr[i], o))

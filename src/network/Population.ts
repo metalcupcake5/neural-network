@@ -9,6 +9,13 @@ export class Population {
     crossoverRate: number;
     mutationRate: number;
 
+    /**
+     * Create a population of networks
+     * @param amount The total number of networks within this population
+     * @param crossoverRate Chance of a crossover occuring between networks of a generation
+     * @param mutationRate Chance for a network to mutate
+     * @param networkSchema Schema for every network
+     */
     constructor(
         amount: number,
         crossoverRate: number,
@@ -36,6 +43,9 @@ export class Population {
         }
     }
 
+    /**
+     * Train a population of networks
+     */
     train() {
         // let game = new Taxi();
         // let state = game.defaultState;
@@ -57,6 +67,9 @@ export class Population {
         }
     }
 
+    /**
+     * Evaluate all networks and print the scores of the top 10
+     */
     evaluate() {
         this.networks.sort((a, b) => b.fitness - a.fitness);
         let scores = [];
@@ -67,9 +80,12 @@ export class Population {
             (total, net) => (total += net.fitness),
             0
         );
-        console.log(scores.join(", ") + ` | average: ${total / 10}`);
+        console.log(scores.join(", ") + ` | average: ${total / this.count}`);
     }
 
+    /**
+     * Create a new generation of networks
+     */
     evolve() {
         this.networks.sort((a, b) => b.fitness - a.fitness);
         let newPop = [];
@@ -95,6 +111,10 @@ export class Population {
         this.generation++;
     }
 
+    /**
+     * Finds a random parent weighted by a network's fitness
+     * @returns A random network
+     */
     findParent() {
         let total = this.networks.reduce(
             (total, net) => (total += net.fitness),

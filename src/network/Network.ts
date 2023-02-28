@@ -10,6 +10,11 @@ export class Network {
     biases: Matrix[];
     fitness: number;
 
+    /**
+     * Create a new network
+     * @param schema Schema of the network
+     * @param empty If the network should be empty or not (all zeroes)
+     */
     constructor(schema: NetworkSchema, empty?: boolean) {
         this.schema = schema;
         this.fitness = 0;
@@ -67,6 +72,11 @@ export class Network {
         }
     }
 
+    /**
+     * Predict a value based on inputs
+     * @param input Array of numbers as long as the number of inputs
+     * @returns Index of the greatest output neuron
+     */
     predict(input: number[]) {
         this.inputLayer = math.matrix(input);
 
@@ -106,6 +116,10 @@ export class Network {
         return outputs.indexOf(Math.max.apply(null, outputs));
     }
 
+    /**
+     * Create a copy of the network
+     * @returns A new network
+     */
     clone() {
         let newNet = new Network(this.schema, true);
         newNet.inputLayer = this.inputLayer.clone();
@@ -126,6 +140,11 @@ export class Network {
         return newNet;
     }
 
+    /**
+     * Create a new network based on the current network
+     * @param learningFactor Factor of learning
+     * @returns A new network
+     */
     reproduce(learningFactor: number) {
         let newNet = new Network(this.schema, true);
 
@@ -154,6 +173,12 @@ export class Network {
         return newNet;
     }
 
+    /**
+     * Reproduce with another network
+     * @param parent A different network
+     * @param rate Rate at which values from the other parent are copied into this network
+     * @returns A new network
+     */
     crossover(parent: Network, rate: number) {
         let newNet = new Network(this.schema, true);
 
@@ -182,6 +207,10 @@ export class Network {
         return newNet;
     }
 
+    /**
+     * Export the network as a object to save to a JSON file
+     * @returns Object containing network data
+     */
     export(): ExportObject {
         let output = {
             schema: this.schema,
@@ -198,6 +227,10 @@ export class Network {
         return output;
     }
 
+    /**
+     * Import network from an object
+     * @param data Data to import from
+     */
     importFromFile(data: ExportObject) {
         this.schema = data.schema;
         this.create(true);
