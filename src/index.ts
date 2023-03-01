@@ -7,6 +7,17 @@ import * as fs from "fs";
 
 main();
 
+// {
+//     wall_up: number;
+//     food_up: number;
+//     wall_down: number;
+//     food_down: number;
+//     wall_left: number;
+//     food_left: number;
+//     wall_right: number;
+//     food_right: number;
+// }
+
 async function main() {
     console.log("clearing saved networks");
     for (const file of await fs.promises.readdir("./build/networks")) {
@@ -15,7 +26,7 @@ async function main() {
 
     console.log("training");
     let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 8,
+        inputs: 100,
         layers: 3,
         neuronsPerLayer: 8,
         outputs: 4,

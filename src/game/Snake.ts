@@ -115,47 +115,57 @@ export class Snake {
      * Get a sample of the distances to the wall and food in each direction
      * @returns Object of distances
      */
-    sample(): {
-        wall_up: number;
-        food_up: number;
-        wall_down: number;
-        food_down: number;
-        wall_left: number;
-        food_left: number;
-        wall_right: number;
-        food_right: number;
-    } {
-        let head = this.body[0];
-        return {
-            wall_up: head[0] + 1,
-            food_up:
-                head[1] == this.food[1]
-                    ? this.food[0] >= head[0]
-                        ? -1
-                        : head[0] - this.food[0]
-                    : -1,
-            wall_down: 10 - head[0],
-            food_down:
-                head[1] == this.food[1]
-                    ? this.food[0] <= head[0]
-                        ? -1
-                        : this.food[0] - head[0]
-                    : -1,
-            wall_left: head[1] + 1,
-            food_left:
-                head[0] == this.food[0]
-                    ? this.food[1] >= head[1]
-                        ? -1
-                        : head[1] - this.food[1]
-                    : -1,
-            wall_right: 10 - head[1],
-            food_right:
-                head[0] == this.food[0]
-                    ? this.food[1] <= head[1]
-                        ? -1
-                        : this.food[1] - head[1]
-                    : -1,
-        };
+    sample() {
+        let field = Array.from(Array(10), () => new Array(10).fill(0));
+        // 0 = empty, 1 = snake, 2 = food
+        for (let r = 0; r < field.length; r++) {
+            for (let c = 0; c < field[r].length; c++) {
+                if (this.food[0] == r && this.food[1] == c) {
+                    field[r][c] = 2;
+                }
+                if (includesArray(this.body, [r, c])) {
+                    field[r][c] = 1;
+                }
+            }
+        }
+
+        let arr = [];
+        field.forEach((array) => {
+            arr = arr.concat(array);
+        });
+        return arr;
+
+        // let head = this.body[0];
+        // return {
+        //     wall_up: head[0] + 1,
+        //     food_up:
+        //         head[1] == this.food[1]
+        //             ? this.food[0] >= head[0]
+        //                 ? -1
+        //                 : head[0] - this.food[0]
+        //             : -1,
+        //     wall_down: 10 - head[0],
+        //     food_down:
+        //         head[1] == this.food[1]
+        //             ? this.food[0] <= head[0]
+        //                 ? -1
+        //                 : this.food[0] - head[0]
+        //             : -1,
+        //     wall_left: head[1] + 1,
+        //     food_left:
+        //         head[0] == this.food[0]
+        //             ? this.food[1] >= head[1]
+        //                 ? -1
+        //                 : head[1] - this.food[1]
+        //             : -1,
+        //     wall_right: 10 - head[1],
+        //     food_right:
+        //         head[0] == this.food[0]
+        //             ? this.food[1] <= head[1]
+        //                 ? -1
+        //                 : this.food[1] - head[1]
+        //             : -1,
+        // };
     }
 
     /**
