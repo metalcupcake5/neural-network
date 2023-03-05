@@ -14,10 +14,13 @@ export class Snake {
      */
     constructor() {
         this.body = [[5, 5]];
-        this.food = [
-            Math.floor(Math.random() * 10),
-            Math.floor(Math.random() * 10),
-        ];
+        this.food = [5, 5];
+        while (includesArray(this.body, this.food)) {
+            this.food = [
+                Math.floor(Math.random() * 10),
+                Math.floor(Math.random() * 10),
+            ];
+        }
         this.life = 100;
         this.score = 0;
         this.turns = 0;
@@ -66,6 +69,12 @@ export class Snake {
                 Math.floor(Math.random() * 10),
                 Math.floor(Math.random() * 10),
             ];
+            while (includesArray(this.body, this.food)) {
+                this.food = [
+                    Math.floor(Math.random() * 10),
+                    Math.floor(Math.random() * 10),
+                ];
+            }
         }
 
         if (!this.ateFood) {
