@@ -26,7 +26,7 @@ async function main() {
 
     console.log("training");
     let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 100,
+        inputs: 12,
         layers: 3,
         neuronsPerLayer: 8,
         outputs: 4,
@@ -117,6 +117,7 @@ async function player() {
         let move = await question("Move: ");
         const { done: d, score: s } = game.act(parseInt(move));
         game.print();
+        console.log(game.sample());
         done = d;
         score = s;
     }

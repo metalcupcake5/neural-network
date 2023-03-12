@@ -138,43 +138,80 @@ export class Snake {
             }
         }
 
-        let arr = [];
-        field.forEach((array) => {
-            arr = arr.concat(array);
-        });
-        return arr;
+        // let arr = [];
+        // field.forEach((array) => {
+        //     arr = arr.concat(array);
+        // });
+        // return arr;
 
-        // let head = this.body[0];
-        // return {
-        //     wall_up: head[0] + 1,
-        //     food_up:
-        //         head[1] == this.food[1]
-        //             ? this.food[0] >= head[0]
-        //                 ? -1
-        //                 : head[0] - this.food[0]
-        //             : -1,
-        //     wall_down: 10 - head[0],
-        //     food_down:
-        //         head[1] == this.food[1]
-        //             ? this.food[0] <= head[0]
-        //                 ? -1
-        //                 : this.food[0] - head[0]
-        //             : -1,
-        //     wall_left: head[1] + 1,
-        //     food_left:
-        //         head[0] == this.food[0]
-        //             ? this.food[1] >= head[1]
-        //                 ? -1
-        //                 : head[1] - this.food[1]
-        //             : -1,
-        //     wall_right: 10 - head[1],
-        //     food_right:
-        //         head[0] == this.food[0]
-        //             ? this.food[1] <= head[1]
-        //                 ? -1
-        //                 : this.food[1] - head[1]
-        //             : -1,
-        // };
+        let head = this.body[0];
+        const obj = {
+            wall_up: head[0] + 1,
+            food_up:
+                head[1] == this.food[1]
+                    ? this.food[0] >= head[0]
+                        ? -1
+                        : head[0] - this.food[0]
+                    : -1,
+            tail_up: (() => {
+                let min = 10;
+                for (const segment of this.body) {
+                    if (segment[1] == head[1] && segment[0] > head[0]) {
+                        min = Math.min(head[0] - segment[0], min);
+                    }
+                }
+                return min < 10 ? min : -1;
+            })(),
+            wall_down: 10 - head[0],
+            food_down:
+                head[1] == this.food[1]
+                    ? this.food[0] <= head[0]
+                        ? -1
+                        : this.food[0] - head[0]
+                    : -1,
+            tail_down: (() => {
+                let min = 10;
+                for (const segment of this.body) {
+                    if (segment[1] == head[1] && segment[0] > head[0]) {
+                        min = Math.min(segment[0] - head[0], min);
+                    }
+                }
+                return min < 10 ? min : -1;
+            })(),
+            wall_left: head[1] + 1,
+            food_left:
+                head[0] == this.food[0]
+                    ? this.food[1] >= head[1]
+                        ? -1
+                        : head[1] - this.food[1]
+                    : -1,
+            tail_left: (() => {
+                let min = 10;
+                for (const segment of this.body) {
+                    if (segment[0] == head[0] && head[1] > segment[1]) {
+                        min = Math.min(head[1] - segment[1], min);
+                    }
+                }
+                return min < 10 ? min : -1;
+            })(),
+            wall_right: 10 - head[1],
+            food_right:
+                head[0] == this.food[0]
+                    ? this.food[1] <= head[1]
+                        ? -1
+                        : this.food[1] - head[1]
+                    : -1,
+            tail_right: (() => {
+                let min = 10;
+                for (const segment of this.body) {
+                    if (segment[0] == head[0] && segment[1] > head[1]) {
+                        min = Math.min(segment[1] - head[1], min);
+                    }
+                }
+                return min < 10 ? min : -1;
+            })(),
+        };
+        return Object.values(obj);
     }
 
     /**
@@ -182,7 +219,7 @@ export class Snake {
      * @returns Fitness value
      */
     fitness() {
-        return 10 * this.score + this.turns;
+        return 20 * this.score + this.turns;
     }
 }
 
