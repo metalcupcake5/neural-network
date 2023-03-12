@@ -92,6 +92,10 @@ export class Population {
         this.networks.slice(0, 5).forEach((net) => {
             newPop.push(net.clone());
         });
+        let stats = {
+            crossedover: 0,
+            mutated: 0,
+        };
         while (newPop.length < this.count) {
             let parent1 = this.networks[Math.floor(Math.random() * 5)];
             let newNet = parent1.clone();
@@ -99,16 +103,21 @@ export class Population {
             if (Math.random() < this.crossoverRate) {
                 let parent2 = this.findParent();
                 newNet = newNet.crossover(parent2, 0.75);
+                stats.crossedover++;
             }
 
             if (Math.random() < this.mutationRate) {
                 newNet = newNet.reproduce(0.95);
+                stats.mutated++;
             }
 
             newPop.push(newNet);
         }
         this.networks = newPop;
         this.generation++;
+        console.log(
+            `${stats.crossedover} crossed over, ${stats.mutated} mutated`
+        );
     }
 
     /**
