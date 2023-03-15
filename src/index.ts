@@ -110,18 +110,17 @@ async function player() {
 
     let game = new Snake();
     let done = false;
-    let score = 0;
     game.print();
     while (!done) {
         console.log("0: up, 1: right, 2: down, 3: left");
         let move = await question("Move: ");
-        const { done: d, score: s } = game.act(parseInt(move));
+        const { done: d } = game.act(parseInt(move));
         game.print();
         console.log(game.sample());
         done = d;
-        score = s;
     }
-    console.log(`Score: ${score}`);
+    console.log(`Score: ${game.score}`);
+    console.log(`Fitness: ${game.fitness()}`);
     rl.close();
 }
 

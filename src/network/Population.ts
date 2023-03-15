@@ -54,16 +54,14 @@ export class Population {
             // game.reset(state);
             let game = new Snake();
             let done = false;
-            let fitness = 0;
             let epochs = 0;
             while (!done) {
                 let sample = Object.values(game.sample());
                 let act = game.act(network.predict([...sample]));
                 done = act.done;
-                fitness = act.fitness;
                 epochs++;
             }
-            network.fitness = fitness;
+            network.fitness = game.fitness();
         }
     }
 
@@ -74,7 +72,7 @@ export class Population {
         this.networks.sort((a, b) => b.fitness - a.fitness);
         let scores = [];
         this.networks.slice(0, 10).forEach((net) => {
-            scores.push(net.fitness);
+            scores.push(Math.floor(net.fitness));
         });
         let total = this.networks.reduce(
             (total, net) => (total += net.fitness),
