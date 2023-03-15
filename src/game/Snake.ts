@@ -54,11 +54,11 @@ export class Snake {
         }
 
         if (newPos.includes(-1) || newPos.includes(10)) {
-            return { done: true, score: this.score, fitness: this.fitness() };
+            return { done: true, score: this.score };
         }
 
         if (includesArray(this.body, newPos)) {
-            return { done: true, score: this.score, fitness: this.fitness() };
+            return { done: true, score: this.score };
         }
 
         if (this.food[0] == headR && this.food[1] == headC) {
@@ -86,13 +86,11 @@ export class Snake {
         this.life--;
         this.turns++;
 
-        if (this.life <= 0)
-            return { done: true, score: this.score, fitness: this.fitness() };
+        if (this.life <= 0) return { done: true, score: this.score };
 
         return {
             done: false,
             score: this.score,
-            fitness: this.fitness(),
         };
     }
 
@@ -219,7 +217,7 @@ export class Snake {
      * @returns Fitness value
      */
     fitness() {
-        return 20 * this.score + this.turns;
+        return this.score * Math.tanh(this.turns / 50) + this.turns;
     }
 }
 
