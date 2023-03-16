@@ -221,11 +221,7 @@ export class Snake {
      * @returns Fitness value
      */
     fitness() {
-        return (
-            this.score * Math.tanh(this.turns / 50) +
-            this.turns +
-            (this.crashed ? -100 : 0)
-        );
+        return this.score * 10 + this.turns + (this.crashed ? -100 : 0);
     }
 }
 
