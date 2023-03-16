@@ -71,7 +71,7 @@ async function replay(num) {
     let data = JSON.parse(file);
     let net = new Network(
         {
-            inputs: 8,
+            inputs: 12,
             layers: 3,
             neuronsPerLayer: 8,
             outputs: 4,

@@ -8,6 +8,7 @@ export class Snake {
     ateFoodPos: [number, number];
     life: number;
     turns: number;
+    crashed: boolean;
 
     /**
      * Create a new game of snake
@@ -24,6 +25,7 @@ export class Snake {
         this.life = 100;
         this.score = 0;
         this.turns = 0;
+        this.crashed = false;
         //this.direction = 3;
     }
 
@@ -54,10 +56,12 @@ export class Snake {
         }
 
         if (newPos.includes(-1) || newPos.includes(10)) {
+            this.crashed = true;
             return { done: true, score: this.score };
         }
 
         if (includesArray(this.body, newPos)) {
+            this.crashed = true;
             return { done: true, score: this.score };
         }
 
@@ -217,7 +221,11 @@ export class Snake {
      * @returns Fitness value
      */
     fitness() {
-        return this.score * Math.tanh(this.turns / 50) + this.turns;
+        return (
+            this.score * Math.tanh(this.turns / 50) +
+            this.turns +
+            (this.crashed ? -100 : 0)
+        );
     }
 }
 
