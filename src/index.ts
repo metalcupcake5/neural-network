@@ -33,7 +33,7 @@ async function main() {
     });
 
     pop.train();
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 5000; i++) {
         console.log(`pop ${i + 1}`);
         pop.evaluate();
         if ((i + 1) % 100 == 0) {
