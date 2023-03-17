@@ -46,23 +46,36 @@ export class Population {
     /**
      * Train a population of networks
      */
-    train() {
+    async train() {
+        let start = Date.now();
         // let game = new Taxi();
         // let state = game.defaultState;
         for (let i = 0; i < this.networks.length; i++) {
+            let plays = 10;
+            let total = 0;
             let network = this.networks[i];
-            // game.reset(state);
-            let game = new Snake();
-            let done = false;
-            let epochs = 0;
-            while (!done) {
-                let sample = Object.values(game.sample());
-                let act = game.act(network.predict([...sample]));
-                done = act.done;
-                epochs++;
+
+            let training = [];
+            for (let i = 0; i < plays; i++) {
+                training.push(
+                    new Promise((resolve, reject) => {
+                        let fitness = this.trainNetwork(network);
+                        resolve(fitness);
+                    })
+                );
             }
-            network.fitness = game.fitness();
+
+            //console.log("training");
+            //console.log(training);
+
+            await Promise.all(training).then((values) => {
+                values.forEach((val) => (total += val));
+            });
+
+            network.fitness = total / plays;
         }
+
+        console.log(`took ${(Date.now() - start) / 1000}s`);
     }
 
     /**
@@ -134,5 +147,19 @@ export class Population {
             if (sum > total) return net;
         }
         return this.networks[Math.floor(Math.random() * this.count)];
+    }
+
+    trainNetwork(network) {
+        // game.reset(state);
+        let game = new Snake();
+        let done = false;
+        let epochs = 0;
+        while (!done) {
+            let sample = Object.values(game.sample());
+            let act = game.act(network.predict([...sample]));
+            done = act.done;
+            epochs++;
+        }
+        return game.fitness();
     }
 }

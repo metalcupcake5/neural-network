@@ -32,7 +32,7 @@ async function main() {
         outputs: 4,
     });
 
-    pop.train();
+    await pop.train();
     for (let i = 0; i < 5000; i++) {
         console.log(`pop ${i + 1}`);
         pop.evaluate();
@@ -43,7 +43,7 @@ async function main() {
             );
         }
         pop.evolve();
-        pop.train();
+        await pop.train();
     }
 
     pop.evaluate();
