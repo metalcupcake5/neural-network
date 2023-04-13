@@ -1,3 +1,4 @@
+import { Maze } from "../game/Maze";
 import { Snake } from "../game/Snake";
 import { Taxi } from "../game/Taxi";
 import { Network, NetworkSchema } from "./Network";
@@ -151,7 +152,7 @@ export class Population {
 
     trainNetwork(network) {
         // game.reset(state);
-        let game = new Snake();
+        let game = new Maze();
         let done = false;
         let epochs = 0;
         while (!done) {

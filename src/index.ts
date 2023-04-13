@@ -4,6 +4,7 @@ import { Network } from "./network/Network";
 import { Population } from "./network/Population";
 import * as readline from "readline";
 import * as fs from "fs";
+import { Maze } from "./game/Maze";
 
 main();
 
@@ -26,7 +27,7 @@ async function main() {
 
     console.log("training");
     let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 12,
+        inputs: 10,
         layers: 3,
         neuronsPerLayer: 8,
         outputs: 4,
@@ -36,7 +37,7 @@ async function main() {
     for (let i = 0; i < 5000; i++) {
         console.log(`pop ${i + 1}`);
         pop.evaluate();
-        if ((i + 1) % 100 == 0) {
+        if ((i + 1) % 1 == 0) {
             fs.writeFileSync(
                 `./build/networks/${i}.json`,
                 JSON.stringify(pop.networks[0].export())
@@ -71,7 +72,7 @@ async function replay(num) {
     let data = JSON.parse(file);
     let net = new Network(
         {
-            inputs: 12,
+            inputs: 10,
             layers: 3,
             neuronsPerLayer: 8,
             outputs: 4,
@@ -79,7 +80,7 @@ async function replay(num) {
         true
     );
     net.importFromFile(data);
-    let game = new Snake();
+    let game = new Maze();
     let done = false;
     game.print();
     run();
@@ -108,7 +109,7 @@ async function player() {
     const util = require("util");
     const question = util.promisify(rl.question).bind(rl);
 
-    let game = new Snake();
+    let game = new Maze();
     let done = false;
     game.print();
     while (!done) {
@@ -116,7 +117,7 @@ async function player() {
         let move = await question("Move: ");
         const { done: d } = game.act(parseInt(move));
         game.print();
-        console.log(game.sample());
+        game.sample();
         done = d;
     }
     console.log(`Score: ${game.score}`);
