@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "fs": "^0.0.1-security",
-        "mathjs": "^11.6.0"
+        "mathjs": "^11.6.0",
+        "numjs": "^0.16.1"
     }
 }

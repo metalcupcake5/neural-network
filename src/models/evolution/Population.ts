@@ -1,6 +1,6 @@
-import { Maze } from "../game/Maze";
-import { Snake } from "../game/Snake";
-import { Taxi } from "../game/Taxi";
+import { Maze } from "../../game/Maze";
+import { Snake } from "../../game/Snake";
+import { Taxi } from "../../game/Taxi";
 import { Network, NetworkSchema } from "./Network";
 
 export class Population {

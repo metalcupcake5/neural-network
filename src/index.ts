@@ -1,12 +1,16 @@
 import math = require("mathjs");
 import { Snake } from "./game/Snake";
-import { Network } from "./network/Network";
-import { Population } from "./network/Population";
+import { Network } from "./models/evolution/Network";
+import { Population } from "./models/evolution/Population";
 import * as readline from "readline";
 import * as fs from "fs";
 import { Maze } from "./game/Maze";
 
-main();
+import nj = require("numjs");
+
+const Q = nj.random([3, 2]);
+
+console.log(Q.get([3]));
 
 // {
 //     wall_up: number;
