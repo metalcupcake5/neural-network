@@ -221,7 +221,16 @@ export class Snake {
      * @returns Fitness value
      */
     fitness() {
-        return this.score * 10 + this.turns + (this.crashed ? -100 : 0);
+        if (this.score < 10) {
+            return (
+                Math.floor(this.turns * this.turns) * Math.pow(2, this.score)
+            );
+        }
+        return (
+            Math.floor(this.turns * this.turns) *
+            Math.pow(2, 10) *
+            (this.score - 9)
+        );
     }
 }
 

@@ -1,16 +1,15 @@
 import math = require("mathjs");
 import { Snake } from "./game/Snake";
-import { Network } from "./models/evolution/Network";
 import { Population } from "./models/evolution/Population";
 import * as readline from "readline";
 import * as fs from "fs";
 import { Maze } from "./game/Maze";
 
 import nj = require("numjs");
+import { Network } from "./models/NEAT/Network";
 
-const Q = nj.random([3, 2]);
-
-console.log(Q.get([3]));
+const net = new Network(2, 1, 1, 1);
+console.log(net.predict([3, 4]));
 
 // {
 //     wall_up: number;
@@ -23,7 +22,7 @@ console.log(Q.get([3]));
 //     food_right: number;
 // }
 
-async function main() {
+/*async function main() {
     console.log("clearing saved networks");
     for (const file of await fs.promises.readdir("./build/networks")) {
         await fs.promises.unlink(`./build/networks/${file}`);
@@ -31,7 +30,7 @@ async function main() {
 
     console.log("training");
     let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 10,
+        inputs: 12,
         layers: 3,
         neuronsPerLayer: 8,
         outputs: 4,
@@ -76,7 +75,7 @@ async function replay(num) {
     let data = JSON.parse(file);
     let net = new Network(
         {
-            inputs: 10,
+            inputs: 12,
             layers: 3,
             neuronsPerLayer: 8,
             outputs: 4,
@@ -84,7 +83,7 @@ async function replay(num) {
         true
     );
     net.importFromFile(data);
-    let game = new Maze();
+    let game = new Snake();
     let done = false;
     game.print();
     run();
@@ -144,3 +143,4 @@ async function cloneTest() {
     console.log(net.hiddenLayers[0]);
     console.log(net.hiddenLayers[0]);
 }
+*/
