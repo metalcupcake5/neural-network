@@ -15,9 +15,7 @@ export class Connection {
     }
 
     activate() {
-        this.value = this.enabled
-            ? this.input.value * this.weight
-            : this.input.value;
+        this.value = this.input.value * this.weight;
         this.output.value += this.value;
         this.output.activationTimes++;
         if (this.output.activationTimes >= this.output.inputs) {

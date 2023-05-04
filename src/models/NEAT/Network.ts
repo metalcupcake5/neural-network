@@ -1,7 +1,6 @@
 import { Connection } from "./Connection";
 import { Node } from "./Node";
 
-//TODO prevent connections from being added if they're disabled
 export class Network {
     inputs: Node[] = [];
     outputs: Node[] = [];
@@ -69,6 +68,7 @@ export class Network {
         }
 
         for (const conn of this.connections) {
+            if (!conn.enabled) continue;
             conn.reset();
             // conn.value = 0;
             // conn.input.outputs.push(conn);
