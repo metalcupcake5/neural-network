@@ -1,14 +1,15 @@
 import math = require("mathjs");
 import { Snake } from "./game/Snake";
-import { Network } from "./models/evolution/Network";
 import { Population } from "./models/evolution/Population";
 import * as readline from "readline";
 import * as fs from "fs";
 import { Maze } from "./game/Maze";
 
 import nj = require("numjs");
+import { Network } from "./models/NEAT/Network";
 
-replay(1049);
+const net = new Network(2, 1, 1, 1);
+console.log(net.predict([3, 4]));
 
 // {
 //     wall_up: number;
@@ -21,7 +22,7 @@ replay(1049);
 //     food_right: number;
 // }
 
-async function main() {
+/*async function main() {
     console.log("clearing saved networks");
     for (const file of await fs.promises.readdir("./build/networks")) {
         await fs.promises.unlink(`./build/networks/${file}`);
@@ -142,3 +143,4 @@ async function cloneTest() {
     console.log(net.hiddenLayers[0]);
     console.log(net.hiddenLayers[0]);
 }
+*/
