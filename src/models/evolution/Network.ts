@@ -151,9 +151,10 @@ export class Network {
         for (let i = 0; i < this.weights.length; i++) {
             let newWeights = this.weights[i].clone();
             math.forEach(newWeights, (value, index, matrix) => {
+                let newValue = value + (Math.random() * 2 - 1) * learningFactor;
                 matrix.set(
                     index,
-                    value + (Math.random() * 2 - 1) * learningFactor
+                    newValue > 1 ? 1 : newValue < -1 ? -1 : newValue
                 );
             });
             newNet.weights[i] = newWeights;
@@ -162,9 +163,10 @@ export class Network {
         for (let i = 0; i < this.biases.length; i++) {
             let newBiases = this.biases[i].clone();
             math.forEach(newBiases, (value, index, matrix) => {
+                let newValue = value + (Math.random() * 2 - 1) * learningFactor;
                 matrix.set(
                     index,
-                    value + (Math.random() * 2 - 1) * learningFactor
+                    newValue > 1 ? 1 : newValue < -1 ? -1 : newValue
                 );
             });
             newNet.biases[i] = newBiases;

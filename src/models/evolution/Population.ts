@@ -119,7 +119,7 @@ export class Population {
             }
 
             if (Math.random() < this.mutationRate) {
-                newNet = newNet.reproduce(0.95);
+                newNet = newNet.reproduce(1);
                 stats.mutated++;
             }
 
@@ -152,7 +152,7 @@ export class Population {
 
     trainNetwork(network) {
         // game.reset(state);
-        let game = new Maze();
+        let game = new Snake();
         let done = false;
         let epochs = 0;
         while (!done) {

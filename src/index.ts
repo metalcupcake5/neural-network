@@ -8,9 +8,7 @@ import { Maze } from "./game/Maze";
 
 import nj = require("numjs");
 
-const Q = nj.random([3, 2]);
-
-console.log(Q.get([3]));
+replay(1049);
 
 // {
 //     wall_up: number;
@@ -31,7 +29,7 @@ async function main() {
 
     console.log("training");
     let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 10,
+        inputs: 12,
         layers: 3,
         neuronsPerLayer: 8,
         outputs: 4,
@@ -76,7 +74,7 @@ async function replay(num) {
     let data = JSON.parse(file);
     let net = new Network(
         {
-            inputs: 10,
+            inputs: 12,
             layers: 3,
             neuronsPerLayer: 8,
             outputs: 4,
@@ -84,7 +82,7 @@ async function replay(num) {
         true
     );
     net.importFromFile(data);
-    let game = new Maze();
+    let game = new Snake();
     let done = false;
     game.print();
     run();
