@@ -34,4 +34,12 @@ export class Node {
         this.value = 0;
         this.activationTimes = 0;
     }
+
+    clone() {
+        let newNode = new Node(
+            this.innovationNumber,
+            this.isOutputNode ? 2 : this.isInputNode ? 1 : 0
+        );
+        return newNode;
+    }
 }

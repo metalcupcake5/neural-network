@@ -8,8 +8,10 @@ import { Maze } from "./game/Maze";
 import nj = require("numjs");
 import { Network } from "./models/NEAT/Network";
 
-const net = new Network(2, 1, 1, 1);
-console.log(net.predict([3, 4]));
+const net = new Network(false, 2, 1, 1, 2);
+const net2 = net.clone();
+console.log(net.predict([3, 2]));
+console.log(net2.predict([3, 2]));
 
 // {
 //     wall_up: number;
