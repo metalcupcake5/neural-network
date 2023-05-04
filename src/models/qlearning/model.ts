@@ -1,4 +1,5 @@
 import math = require("mathjs");
+import nj = require("numjs");
 
 export class Model {
     max_episodes: number;
@@ -19,17 +20,17 @@ export class Model {
 
         this.env = environment;
 
-        this.Q = math.zeros(16, 4);
+        this.Q = nj.zeros([16, 4]);
     }
 
     policy(mode, state, e_rate) {
         if (mode == "train") {
             if (Math.random() > e_rate) {
-                return math.max(this.Q[state]);
+                return nj.max(this.Q[state]);
             }
             return this.env.sample();
         } else if (mode == "test") {
-            return math.max(this.Q[state]);
+            return nj.max(this.Q[state]);
         }
     }
 
