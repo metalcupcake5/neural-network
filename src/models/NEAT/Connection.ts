@@ -34,6 +34,16 @@ export class Connection {
         this.input.outputs.push(this);
         this.output.inputs++;
     }
+
+    export() {
+        return {
+            weight: this.weight,
+            enabled: this.enabled,
+            innovationNumber: this.innovationNumber,
+            input: this.input.innovationNumber,
+            output: this.output.innovationNumber,
+        };
+    }
 }
 
 // random gaussian modified from https://github.com/processing/p5.js/blob/v1.6.0/src/math/random.js

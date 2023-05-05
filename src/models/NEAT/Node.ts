@@ -42,4 +42,10 @@ export class Node {
         );
         return newNode;
     }
+
+    export() {
+        return {
+            innovationNumber: this.innovationNumber,
+        };
+    }
 }

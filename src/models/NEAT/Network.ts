@@ -219,4 +219,63 @@ export class Network {
 
         return child;
     }
+
+    export() {
+        const obj = {
+            connections: [],
+            nodes: [],
+            inputs: [],
+            outputs: [],
+            innovationCount: this.innovationCount,
+        };
+
+        for (const input of this.inputs) {
+            obj.inputs.push(input.export());
+        }
+
+        for (const output of this.outputs) {
+            obj.outputs.push(output.export());
+        }
+
+        for (const node of this.nodes) {
+            obj.nodes.push(node.export());
+        }
+
+        for (const conn of this.connections) {
+            obj.connections.push(conn.export());
+        }
+        return obj;
+    }
+
+    import(data) {
+        this.innovationCount = data.innovationCount;
+        for (const output of data.outputs) {
+            this.outputs.push(new Node(output.innovationNumber, 2));
+        }
+
+        for (const input of data.inputs) {
+            this.inputs.push(new Node(input.innovationNumber, 1));
+        }
+
+        for (const connection of data.connections) {
+            let node1 = this.findNode(connection.input);
+            if (!node1) {
+                node1 = new Node(connection.input, 0);
+                this.nodes.push(node1);
+            }
+            let node2 = this.findNode(connection.output);
+            if (!node2) {
+                node2 = new Node(connection.output, 0);
+                this.nodes.push(node2);
+            }
+            let newConnection = new Connection(
+                connection.innovationNumber,
+                node1,
+                node2
+            );
+            newConnection.weight = connection.weight;
+            newConnection.enabled = connection.enabled;
+            this.connections.push(newConnection);
+        }
+    }
 }
