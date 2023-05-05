@@ -10,8 +10,11 @@ import { Network } from "./models/NEAT/Network";
 
 const net = new Network(false, 2, 1, 1, 2);
 const net2 = net.clone();
+net2.mutate(1);
 console.log(net.predict([3, 2]));
 console.log(net2.predict([3, 2]));
+const net3 = net.crossover(net2);
+console.log(net3.predict([3, 2]));
 
 // {
 //     wall_up: number;

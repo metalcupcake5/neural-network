@@ -98,12 +98,11 @@ export class Network {
 
     mutate(rate: number) {
         if (Math.random() < rate) {
-            let a = 2;
             let conn =
                 this.connections[
                     Math.floor(Math.random() * this.connections.length)
                 ];
-            switch (a) {
+            switch (Math.floor(Math.random() * 4)) {
                 case 0: // weight mutation
                     conn.mutate();
                     break;
@@ -122,7 +121,6 @@ export class Network {
                     let unconnectedNodes = this.nodes.filter(
                         (n) => !disallowedNodes.includes(n.innovationNumber)
                     );
-                    console.log(unconnectedNodes.length);
                     if (unconnectedNodes.length <= 0) {
                         break;
                     }
@@ -202,5 +200,23 @@ export class Network {
         return newNetwork;
     }
 
-    crossover(parent: Network) {}
+    /**
+     * Cross over the current network with another - always takes higher fitness network as argument
+     * @param parent Network with higher fitness
+     */
+    crossover(parent: Network) {
+        let child = parent.clone();
+        for (const connection of child.connections) {
+            let matching = this.connections.find(
+                (c) => c.innovationNumber == connection.innovationNumber
+            );
+            if (matching) {
+                let value =
+                    Math.random() < 0.5 ? connection.weight : matching.weight;
+                connection.weight = value;
+            }
+        }
+
+        return child;
+    }
 }
