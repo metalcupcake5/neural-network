@@ -96,7 +96,63 @@ export class Network {
         return this.outputs.map((n) => n.value);
     }
 
-    mutate(rate: number) {
+    /**
+     *
+     * @param type 0: mutate connections, 1: add node, 2: add connection
+     */
+    mutate(type: number) {
+        switch (type) {
+            case 0: // mutate all connections
+                for (const conn of this.connections) {
+                    if (Math.random() < 0.9) {
+                        conn.mutate();
+                    } else {
+                        conn.weight = Math.random() * 2 - 1;
+                    }
+                }
+                break;
+            case 1: // add node
+                let conn =
+                    this.connections[
+                        Math.floor(Math.random() * this.connections.length)
+                    ];
+                let newNode = new Node(this.innovationCount, 0);
+                this.nodes.push(newNode);
+                this.innovationCount++;
+                conn.input = newNode;
+                let newConnection = new Connection(
+                    this.innovationCount,
+                    conn.input,
+                    newNode
+                );
+                newConnection.weight = 1;
+                this.connections.push(newConnection);
+                this.innovationCount++;
+                break;
+            case 2: // add connection
+                let node =
+                    this.nodes[Math.floor(Math.random() * this.nodes.length)];
+                let disallowedNodes = [node.innovationNumber];
+                for (const conn of node.outputs) {
+                    disallowedNodes.push(conn.output.innovationNumber);
+                }
+                let unconnectedNodes = this.nodes.filter(
+                    (n) => !disallowedNodes.includes(n.innovationNumber)
+                );
+                if (unconnectedNodes.length <= 0) {
+                    break;
+                }
+                let output =
+                    unconnectedNodes[
+                        Math.floor(Math.random() * unconnectedNodes.length)
+                    ];
+                this.connections.push(
+                    new Connection(this.innovationCount, node, output)
+                );
+                this.innovationCount++;
+                break;
+        }
+        /*
         if (Math.random() < rate) {
             let conn =
                 this.connections[
@@ -144,13 +200,10 @@ export class Network {
                     this.connections.push(newConnection);
                     this.innovationCount++;
                     break;
-                /*case 3: // connection flip
-                    conn.enabled = !conn.enabled;
-                    break;*/
             }
             return 1;
         }
-        return 0;
+        return 0;*/
     }
 
     findNode(innNum: number) {

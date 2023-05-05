@@ -16,7 +16,7 @@ const a = async () => {
     pop.evolve();
 };
 a();*/
-main();
+replay(95);
 
 // {
 //     wall_up: number;

@@ -106,7 +106,18 @@ export class Population {
 
         let mutCount = 0;
         for (const network of newPop) {
-            mutCount += network.mutate(this.mutationRate);
+            if (Math.random() < 0.05) {
+                mutCount++;
+                network.mutate(2);
+            }
+            if (Math.random() < 0.03) {
+                mutCount++;
+                network.mutate(1);
+            }
+            if (Math.random() < 0.8) {
+                mutCount++;
+                network.mutate(0);
+            }
         }
 
         console.log(`${mutCount} networks mutated`);

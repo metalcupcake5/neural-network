@@ -3,7 +3,7 @@ import { Node } from "./Node";
 export class Connection {
     input: Node;
     output: Node;
-    weight: number = Math.random();
+    weight: number = Math.random() * 2 - 1;
     value: number = 0;
     enabled: boolean = true;
     innovationNumber: number = 0;
