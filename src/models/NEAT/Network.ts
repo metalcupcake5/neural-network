@@ -102,14 +102,11 @@ export class Network {
                 this.connections[
                     Math.floor(Math.random() * this.connections.length)
                 ];
-            switch (Math.floor(Math.random() * 4)) {
+            switch (Math.floor(Math.random() * 3)) {
                 case 0: // weight mutation
                     conn.mutate();
                     break;
-                case 1: // connection disable
-                    conn.enabled = !conn.enabled;
-                    break;
-                case 2: // add connection
+                case 1: // add connection
                     let node =
                         this.nodes[
                             Math.floor(Math.random() * this.nodes.length)
@@ -133,21 +130,27 @@ export class Network {
                     );
                     this.innovationCount++;
                     break;
-                case 3: // add node
+                case 2: // add node
                     let newNode = new Node(this.innovationCount, 0);
                     this.nodes.push(newNode);
                     this.innovationCount++;
+                    conn.input = newNode;
                     let newConnection = new Connection(
                         this.innovationCount,
                         conn.input,
                         newNode
                     );
+                    newConnection.weight = 1;
                     this.connections.push(newConnection);
                     this.innovationCount++;
-                    conn.input = newNode;
                     break;
+                /*case 3: // connection flip
+                    conn.enabled = !conn.enabled;
+                    break;*/
             }
+            return 1;
         }
+        return 0;
     }
 
     findNode(innNum: number) {

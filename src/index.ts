@@ -1,20 +1,22 @@
 import math = require("mathjs");
 import { Snake } from "./game/Snake";
-import { Population } from "./models/evolution/Population";
 import * as readline from "readline";
 import * as fs from "fs";
 import { Maze } from "./game/Maze";
 
 import nj = require("numjs");
 import { Network } from "./models/NEAT/Network";
+import { Population } from "./models/NEAT/Population";
 
-const net = new Network(false, 2, 1, 1, 2);
-const net2 = net.clone();
-net2.mutate(1);
-console.log(net.predict([3, 2]));
-console.log(net2.predict([3, 2]));
-const net3 = net.crossover(net2);
-console.log(net3.predict([3, 2]));
+/*const pop = new Population(2000, 0.3);
+console.log("starting");
+const a = async () => {
+    await pop.train();
+    pop.evaluate();
+    pop.evolve();
+};
+a();*/
+main();
 
 // {
 //     wall_up: number;
@@ -27,19 +29,14 @@ console.log(net3.predict([3, 2]));
 //     food_right: number;
 // }
 
-/*async function main() {
+async function main() {
     console.log("clearing saved networks");
     for (const file of await fs.promises.readdir("./build/networks")) {
         await fs.promises.unlink(`./build/networks/${file}`);
     }
 
     console.log("training");
-    let pop = new Population(2000, 0.2, 0.75, {
-        inputs: 12,
-        layers: 3,
-        neuronsPerLayer: 8,
-        outputs: 4,
-    });
+    let pop = new Population(2000, 0.7);
 
     await pop.train();
     for (let i = 0; i < 5000; i++) {
@@ -48,7 +45,7 @@ console.log(net3.predict([3, 2]));
         if ((i + 1) % 1 == 0) {
             fs.writeFileSync(
                 `./build/networks/${i}.json`,
-                JSON.stringify(pop.networks[0].export())
+                JSON.stringify(pop.fitnesses[0].net.export())
             );
         }
         pop.evolve();
@@ -56,10 +53,10 @@ console.log(net3.predict([3, 2]));
     }
 
     pop.evaluate();
-    let network = pop.networks[0];
+    let network = pop.fitnesses[0];
     console.log(`score: ${network.fitness}`);
 }
-
+/*
 async function testing(num) {
     let pop = new Population(500, 0.75, 0.2, {
         inputs: 8,
@@ -70,7 +67,7 @@ async function testing(num) {
 
     pop.train();
     pop.findParent();
-}
+}*/
 
 async function replay(num) {
     let file = await fs.promises.readFile(
@@ -78,16 +75,8 @@ async function replay(num) {
         "utf-8"
     );
     let data = JSON.parse(file);
-    let net = new Network(
-        {
-            inputs: 12,
-            layers: 3,
-            neuronsPerLayer: 8,
-            outputs: 4,
-        },
-        true
-    );
-    net.importFromFile(data);
+    let net = new Network(true);
+    net.import(data);
     let game = new Snake();
     let done = false;
     game.print();
@@ -97,7 +86,7 @@ async function replay(num) {
         setTimeout(() => {
             let sample = Object.values(game.sample());
             let prediction = net.predict([...sample]);
-            let act = game.act(prediction);
+            let act = game.act(prediction.indexOf(Math.max(...prediction)));
             done = act.done;
 
             game.print();
@@ -107,7 +96,7 @@ async function replay(num) {
         }, 250);
     }
 }
-
+/*
 async function player() {
     let rl = readline.createInterface({
         input: process.stdin,
