@@ -16,7 +16,9 @@ const a = async () => {
     pop.evolve();
 };
 a();*/
-replay(95);
+replay(271);
+
+//to
 
 // {
 //     wall_up: number;
@@ -93,6 +95,9 @@ async function replay(num) {
             if (!done) {
                 run();
             }
+            console.log(
+                `Score: ${game.score} | ${game.turns} epochs survived\n`
+            );
         }, 250);
     }
 }

@@ -72,7 +72,9 @@ export class Population {
             (total, net) => (total += net.fitness),
             0
         );
-        console.log(scores.join(", ") + ` | average: ${total / this.count}`);
+        console.log(
+            scores.join(", ") + ` | average fitness: ${total / this.count}`
+        );
     }
 
     evolve() {
