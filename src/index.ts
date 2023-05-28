@@ -7,16 +7,9 @@ import { Maze } from "./game/Maze";
 import nj = require("numjs");
 import { Network } from "./models/NEAT/Network";
 import { Population } from "./models/NEAT/Population";
+import { MineSweeper } from "./game/Minesweeper";
 
-/*const pop = new Population(2000, 0.3);
-console.log("starting");
-const a = async () => {
-    await pop.train();
-    pop.evaluate();
-    pop.evolve();
-};
-a();*/
-replay(271);
+player();
 
 //to
 
@@ -101,7 +94,7 @@ async function replay(num) {
         }, 250);
     }
 }
-/*
+
 async function player() {
     let rl = readline.createInterface({
         input: process.stdin,
@@ -111,35 +104,27 @@ async function player() {
     const util = require("util");
     const question = util.promisify(rl.question).bind(rl);
 
-    let game = new Maze();
+    let game = new MineSweeper(5);
     let done = false;
-    game.print();
+    console.log(`mines: ${game.mines.length}`);
+    //game.mines[3][4] = -1;
+    // game.printGame(1);
+    // game.printGame();
+    // game.act(3, 4);
+    game.printGame();
     while (!done) {
-        console.log("0: up, 1: right, 2: down, 3: left");
-        let move = await question("Move: ");
-        const { done: d } = game.act(parseInt(move));
-        game.print();
-        game.sample();
+        let row = await question("row: ");
+        let col = await question("column: ");
+        const { done: d } = game.act(parseInt(row), parseInt(col));
+        game.printGame();
         done = d;
     }
     console.log(`Score: ${game.score}`);
-    console.log(`Fitness: ${game.fitness()}`);
+    //console.log(`Fitness: ${game.fitness()}`);
     rl.close();
 }
-
-async function cloneTest() {
-    let net = new Network({
-        inputs: 2,
-        layers: 3,
-        neuronsPerLayer: 8,
-        outputs: 4,
-    });
-
-    console.log(net.predict([0, 1]));
-
-    let test = net.clone();
-
-    console.log(net.hiddenLayers[0]);
-    console.log(net.hiddenLayers[0]);
-}
-*/
+const includesArray = (data, arr) => {
+    return data.some(
+        (e) => Array.isArray(e) && e.every((o, i) => Object.is(arr[i], o))
+    );
+};

@@ -57,12 +57,12 @@ export class Snake {
 
         if (newPos.includes(-1) || newPos.includes(10)) {
             this.crashed = true;
-            return { done: true, score: this.score };
+            return { done: true };
         }
 
         if (includesArray(this.body, newPos)) {
             this.crashed = true;
-            return { done: true, score: this.score };
+            return { done: true };
         }
 
         if (this.food[0] == headR && this.food[1] == headC) {
@@ -94,7 +94,6 @@ export class Snake {
 
         return {
             done: false,
-            score: this.score,
         };
     }
 
